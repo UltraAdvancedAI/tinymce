@@ -1,13 +1,14 @@
-import { TableSelection } from '@ephox/darwin';
+import { TableSelection, SelectionTypes } from '@ephox/darwin';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
-import SelectionTypes, { SelectionType } from './SelectionTypes';
+import { SelectionType } from './SelectionTypes';
 
 export interface Selections {
   get: () => SelectionType;
 }
 
 // tslint:disable-next-line:variable-name
-export const Selections = (root: SugarElement<Element>, getStart: any, selectedSelector: string) => {
+export const Selections = (root: SugarElement<Element>, getStart: () => Optional<SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>>, selectedSelector: string): Selections => {
   const get = () => TableSelection.retrieve(root, selectedSelector).fold(
     () => getStart().map(SelectionTypes.single).getOr(SelectionTypes.none()),
     (cells: SugarElement<Element>[]) => SelectionTypes.multiple(cells)
